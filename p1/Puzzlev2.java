@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Puzzle {
+public class Puzzlev2 {
   
    public static long calculate(String s) {
     return 1;
@@ -37,15 +37,17 @@ public class Puzzle {
       list2.add(Integer.parseInt(lineSplit[1]));
     }
 
-    Collections.sort(list1);
-    Collections.sort(list2);
+    Map<Integer, Integer> numberCount = new HashMap<>();
+    for (Integer number : list2) {
+      numberCount.put(number, numberCount.getOrDefault(number, 0) + 1);
+    }
 
-    int differences = 0;
-    for (int i = 0; i < list1.size(); i++) {
-      differences += Math.abs(list1.get(i) - list2.get(i));
+    int answer = 0;
+    for (Integer number : list1) {
+      answer += number * numberCount.getOrDefault(number, 0);
     }
         
-    System.out.println("answer is " + differences);     
+    System.out.println("answer is " + answer);     
     
     System.out.println("time taken " + (clock.millis() - startTime) + "ms");
   }
