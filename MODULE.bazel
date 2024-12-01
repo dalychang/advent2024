@@ -1,0 +1,7 @@
+"Bazel module dependencies, see https://bazel.build/external/overview#bzlmod"
+
+bazel_dep(name = "aspect_bazel_lib", version = "2.8.0")
+bazel_dep(name = "rules_jvm_external", version = "6.0")
+bazel_dep(name = "bazel_skylib", version = "1.7.1")
+bazel_dep(name = "rules_java", version = "7.8.0")
+bazel_dep(name = "rules_pkg", version = "1.0.1")
