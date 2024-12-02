@@ -1,7 +1,9 @@
 package dev.advent;
 
 import java.time.Clock;
+import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,12 +18,12 @@ import java.util.regex.Pattern;
 
 public class Puzzle {
   
-   public static long calculate(String s) {
+  public static long calculate(String s) {
     return 1;
   }
     
   public static void main(String[] args) throws Exception {
-    final List<String> lines = Helper.loadFile("dev_advent/p1/input.txt");
+    final List<String> lines = Helper.loadFile("dev_advent/p1/example.txt");
     Clock clock = Clock.systemUTC();
     long startTime = clock.millis();
     
