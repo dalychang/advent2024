@@ -48,59 +48,12 @@ public class Puzzle {
     }
   };
 
-  public static class Position {
-    public final int x;
-    public final int y;
-
-    public Position(int x, int y) {
-      this.x = x;
-      this.y = y;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      Position p = (Position) obj;
-      return p.x == x && p.y == y;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(x, y);
-    }
-
-    @Override
-    public String toString() {
-      return String.format("(%d, %d)", x, y);
-    }
+  public record Position(int x, int y) {
   }
 
-  public static class DirectedPosition {
-    public final Position position;
-    public final Direction direction;
-
-    public DirectedPosition(Position position, Direction direction) {
-      this.position = position;
-      this.direction = direction;
-    }
-
+  public record DirectedPosition(Position position, Direction direction) {
     public DirectedPosition moveForward() {
       return new DirectedPosition(new Position(position.x + direction.dx, position.y + direction.dy), direction);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      DirectedPosition p = (DirectedPosition) obj;
-      return p.position.equals(position) && p.direction == direction;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(position, direction);
-    }
-
-    @Override
-    public String toString() {
-      return String.format("(%d, %d) - %s", position.x, position.y, direction);
     }
   }
     
