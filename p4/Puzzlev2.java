@@ -55,10 +55,6 @@ public class Puzzlev2 {
     final List<String> lines = Helper.loadFile("dev_advent/p4/input.txt");
     Clock clock = Clock.systemUTC();
     long startTime = clock.millis();
-    
-    for (String line : lines) {
-      System.out.println(line);
-    }
 
     int answer = 0;
     for (int y = 0; y < lines.size(); y++) {
