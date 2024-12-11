@@ -39,10 +39,6 @@ public class Puzzlev2 {
       }
     }
   }
-  
-  public static long calculate(String s) {
-    return 1;
-  }
 
   public static void runStones(Stone stone, Map<State, Long> blinkStateMap, int iterationsLeft) {
     if (iterationsLeft == 0) {
