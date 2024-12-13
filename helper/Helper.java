@@ -59,6 +59,16 @@ public class Helper {
     }
     System.out.println("");    
   }
+
+  public static void printCharMap(char[][] bitmap) {
+    for (int i = 0; i < bitmap.length; i++) {
+      for (int j = 0; j < bitmap[0].length; j++) {
+        System.out.print(bitmap[i][j]);
+      }
+      System.out.println("");
+    }
+    System.out.println("");    
+  }
   
   public static void printLines(List<String> lines) {
     for (String line : lines) {
