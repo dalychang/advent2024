@@ -1,10 +1,5 @@
 package dev.advent;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.math.RoundingMode;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.Clock;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -29,22 +24,19 @@ public class Puzzlev2 {
 
   public record Machine(Position a, Position b, Position goal) {}
   
-  public static BigInteger calculate(Machine m) {
+  public static long calculate(Machine m) {
     double b = (m.goal.y - ((double)m.a.y / m.a.x)*m.goal.x) / (m.b.y - ((double)m.a.y / m.a.x)*m.b.x);
     double a = (m.goal.x - ((double)m.b.x * b)) / m.a.x;
 
-    BigDecimal bigA = BigDecimal.valueOf(a);
-    BigDecimal bigB = BigDecimal.valueOf(b);
-    BigInteger iA = bigA.setScale(0, RoundingMode.HALF_UP).toBigInteger();
-    BigInteger iB = bigB.setScale(0, RoundingMode.HALF_UP).toBigInteger();
+    long iA = Math.round(a);
+    long iB = Math.round(b);
 
-    if (iA.longValue() * m.a.x + iB.longValue() * m.b.x == m.goal.x
-        && iA.longValue() * m.a.y + iB.longValue() * m.b.y == m.goal.y) {
-      BigDecimal total = BigDecimal.valueOf(3).multiply(bigA).add(bigB);
-      return total.setScale(0, RoundingMode.HALF_UP).toBigInteger();
+    if (iA * m.a.x + iB * m.b.x == m.goal.x
+        && iA * m.a.y + iB * m.b.y == m.goal.y) {
+      return 3L * Math.round(a) + Math.round(b);
     }
     
-    return BigInteger.ZERO;
+    return 0;
   }
     
   public static void main(String[] args) throws Exception {
@@ -70,10 +62,9 @@ public class Puzzlev2 {
       machines.add(m);
     }
 
-    BigInteger answer = BigInteger.ZERO;
-    for (Machine m : machines) {
-      answer = answer.add(calculate(m));
-    }
+    long answer = machines.stream()
+        .map(Puzzlev2::calculate)
+        .reduce(0L, Long::sum);
         
     System.out.println("answer is " + answer);     
     
