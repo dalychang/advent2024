@@ -35,6 +35,28 @@ public class Helper {
       throw new RuntimeException(e);
     }
   }
+
+  public static char[][] readCharGrid(List<String> lines) {
+    char[][] grid = new char[lines.size()][lines.get(0).length()];
+    for (int y = 0; y < lines.size(); y++) {
+      for (int x = 0; x < lines.get(y).length(); x++) {
+        grid[y][x] = lines.get(y).charAt(x);
+      }
+    }
+    return grid;
+  }
+
+  public static int[][] readIntGrid(List<String> lines, String divider) {
+    int width = lines.get(0).split(divider).length;
+    int[][] grid = new int[lines.size()][width];
+    for (int y = 0; y < lines.size(); y++) {
+      String[] split = lines.get(y).split(divider);
+      for (int x = 0; x < split.length; x++) {
+        grid[y][x] = split[x];
+      }
+    }
+    return grid;
+  }
   
   public static void printBitmap(boolean[][] bitmap, char yesChar, char noChar) {
     for (int i = 0; i < bitmap.length; i++) {
