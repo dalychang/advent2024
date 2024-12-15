@@ -52,7 +52,7 @@ public class Helper {
     for (int y = 0; y < lines.size(); y++) {
       String[] split = lines.get(y).split(divider);
       for (int x = 0; x < split.length; x++) {
-        grid[y][x] = split[x];
+        grid[y][x] = Integer.parseInt(split[x]);
       }
     }
     return grid;
