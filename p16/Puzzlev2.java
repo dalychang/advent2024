@@ -87,7 +87,7 @@ public class Puzzlev2 {
     return new Path(next, nv, newScore);
   }
 
-  public static Path createPath2(char[][] grid, int maxX, int maxY, Path cp, Direction nd, int scoreDelta, Map<DirectedPosition, Integer> bestScores) {
+  public static Path createPath2(char[][] grid, int maxX, int maxY, Path cp, Direction nd, int scoreDelta, Map<DirectedPosition, Integer> bestScores, Set<DirectedPosition> visitedDp) {
     DirectedPosition next = new DirectedPosition(new Position(cp.dp.p.x + nd.dx, cp.dp.p.y + nd.dy), nd);
     if (grid[cp.dp.p.y][cp.dp.p.x] == '#') {
       return null;
@@ -96,9 +96,13 @@ public class Puzzlev2 {
       return null;
     }
     int newScore = cp.score + scoreDelta;
-    if (bestScores.getOrDefault(next, Integer.MAX_VALUE) < newScore) {
+    if (bestScores.getOrDefault(next, Integer.MAX_VALUE) != newScore) {
       return null;
     }
+    if (visitedDp.contains(next)) {
+      return null;
+    }
+    visitedDp.add(next);
 
     Set<Position> nv = new HashSet<>(cp.visited);
     nv.add(next.p);
@@ -183,48 +187,48 @@ public class Puzzlev2 {
     }
 
     // 2nd round
-    PriorityQueue<Path> queue2 = new PriorityQueue<Path>((i1, i2) -> i2.score - i1.score);
     Set<Position> bestSeats = new HashSet<>();
-    queue2.add(new Path(start, Set.of(startPosition), 0));
-    queue2.add(new Path(new DirectedPosition(startPosition, Direction.NORTH), Set.of(startPosition), 1001));
-    queue2.add(new Path(new DirectedPosition(startPosition, Direction.SOUTH), Set.of(startPosition), 1001));
-    queue2.add(new Path(new DirectedPosition(startPosition, Direction.WEST), Set.of(startPosition), 2001));
-    while (!queue2.isEmpty()) {
-      Path path = queue2.poll();
+    Set<DirectedPosition> visitedDp = new HashSet<>();
+    queue.add(new Path(start, Set.of(startPosition), 0));
+    queue.add(new Path(new DirectedPosition(startPosition, Direction.NORTH), Set.of(startPosition), 1001));
+    queue.add(new Path(new DirectedPosition(startPosition, Direction.SOUTH), Set.of(startPosition), 1001));
+    queue.add(new Path(new DirectedPosition(startPosition, Direction.WEST), Set.of(startPosition), 2001));
+    while (!queue.isEmpty()) {
+      Path path = queue.poll();
       if (path.score > bestScore) {
         continue;
       }
 
       // Forward.
       {
-        Path np = createPath2(grid, maxX, maxY, path, path.dp.d, 1, bestScores);
+        Path np = createPath2(grid, maxX, maxY, path, path.dp.d, 1, bestScores, visitedDp);
         if (np != null) {
           if (np.dp.p.equals(endPosition)) {
             bestSeats.addAll(np.visited);
           } else {
-            queue2.add(np);
+            queue.add(np);
           }
         }
       }
       // Left
       {
-        Path np = createPath2(grid, maxX, maxY, path, path.dp.d.turnLeft(), 1001, bestScores);
+        Path np = createPath2(grid, maxX, maxY, path, path.dp.d.turnLeft(), 1001, bestScores, visitedDp);
         if (np != null) {
           if (np.dp.p.equals(endPosition)) {
             bestSeats.addAll(np.visited);
           } else {
-            queue2.add(np);
+            queue.add(np);
           }
         }
       }
       // Right
       {
-        Path np = createPath2(grid, maxX, maxY, path, path.dp.d.turnRight(), 1001, bestScores);
+        Path np = createPath2(grid, maxX, maxY, path, path.dp.d.turnRight(), 1001, bestScores, visitedDp);
         if (np != null) {
           if (np.dp.p.equals(endPosition)) {
             bestSeats.addAll(np.visited);
           } else {
-            queue2.add(np);
+            queue.add(np);
           }
         }
       }
