@@ -23,9 +23,10 @@ import java.util.regex.Pattern;
 public class Puzzlev3 {
   private static final Pattern REGISTER_PATTERN = Pattern.compile("Register (\\w): (\\d+)");
   private static final Pattern PROGRAM_PATTERN = Pattern.compile("Program: (.*)");
-  private static final long THREAD_DELTA = 100000;
+  private static final long THREAD_DELTA = 10000000;
+  private static final int THREADS = 32;
 
-  private static final ExecutorService executorService = Executors.newFixedThreadPool(30);
+  private static final ExecutorService executorService = Executors.newFixedThreadPool(THREADS);
 
   public static long getComboOperand(Map<Character, Long> registers, int operand) {
     switch (operand) {
@@ -154,7 +155,7 @@ public class Puzzlev3 {
     }
   }
 
-  public static boolean testA(long a, long b, long c, List<Integer> program) {
+  /*public static boolean testA(long a, long b, long c, List<Integer> program) {
     Map<Character, Long> registers = new HashMap<>();
     registers.put('A', a);
     registers.put('B', b);
@@ -175,6 +176,33 @@ public class Puzzlev3 {
       }
       if (result.instruction != null) {
         i = result.instruction - 2;
+      }
+    }
+
+    return outputIndex == program.size();
+  }*/
+
+  public static boolean testA(long a, long b, long c, List<Integer> program) {
+    int outputIndex = 0;
+    long initialA = a;
+
+    while (true) {
+      b = (a % 8) ^ 1;
+      c = a >> b;
+      a = a >> 3;
+      b = b ^ c ^ 6;
+
+      if ((int) (b % 8) == program.get(outputIndex)) {
+        if (outputIndex == 14) {
+          System.out.println("15th " + initialA + " " + Long.toOctalString(initialA));
+        }
+        outputIndex++;
+      } else {
+        return false;
+      }
+
+      if (a == 0 || outputIndex > program.size()) {
+        break;
       }
     }
 
@@ -215,7 +243,9 @@ public class Puzzlev3 {
     System.out.println("Registers: " + registers);
     System.out.println("Program: " + program);
 
-    for (int i = 0; i < 30; i++) {
+    final long b = registers.get('B');
+    final long c = registers.get('C');
+    for (int i = 0; i < THREADS; i++) {
       executorService.execute(new Runnable() {
         @Override
         public void run() {
@@ -231,13 +261,13 @@ public class Puzzlev3 {
               }
 
               long testValue = testValueStart + j;
-              boolean result = testA(testValue, registers.get('B'), registers.get('C'), program);
+              boolean result = testA(testValue, b, c, program);
               if (result) {
                 atomicAnswer.set(testValue);
                 latch.countDown();
               }
     
-              if (testValue % 1000000 == 0) {
+              if (testValue % 10000000 == 0) {
                 System.out.println("Iter " + testValue);
               }
             }
