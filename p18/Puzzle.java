@@ -43,12 +43,7 @@ public class Puzzle {
   }
   
   public static long traverse(boolean[][] grid, Position start, Position end) {
-    int[][] bestPath = new int[MAX_COORD][MAX_COORD];
-    for (int y = 0; y < MAX_COORD; y++) {
-      for (int x = 0; x < MAX_COORD; x++) {
-        bestPath[y][x] = Integer.MAX_VALUE;
-      }
-    }
+    Map<Position, Integer> exploredPositions = new HashMap<>();
 
     List<Path> paths = new ArrayList<>();
     int bestScore = Integer.MAX_VALUE;
@@ -63,8 +58,8 @@ public class Puzzle {
           continue;
         }
 
-        if (isValid(nPos, grid) && bestPath[nPos.y][nPos.x] > path.steps + 1) {
-          bestPath[nPos.y][nPos.x] = path.steps + 1;
+        if (isValid(nPos, grid) && !exploredPositions.containsKey(nPos)) {
+          exploredPositions.put(nPos, path.steps + 1);
           paths.add(new Path(nPos, path.steps + 1));
         }
       }
@@ -84,8 +79,8 @@ public class Puzzle {
       positions.add(new Position(Integer.parseInt(split[0]), Integer.parseInt(split[1])));
     }
 
-    System.out.println(positions);
-    System.out.println(positions.size());
+    //System.out.println(positions);
+    //System.out.println(positions.size());
 
     boolean[][] grid = new boolean[MAX_COORD][MAX_COORD];
     int count = 0;
@@ -95,10 +90,10 @@ public class Puzzle {
       count++;
     }
 
-    Helper.printBitmap(grid, '#', ' ');
+    //Helper.printBitmap(grid, '#', ' ');
 
     for (int i = FIRST_STEPS; i < positions.size(); i++) {
-      System.out.println("Trying " + i);
+      //System.out.println("Trying " + i);
       grid[positions.get(i).y][positions.get(i).x] = true;
       long answer = traverse(grid, new Position(0, 0), new Position(MAX_COORD - 1, MAX_COORD - 1));
       if (answer == Integer.MAX_VALUE) {
