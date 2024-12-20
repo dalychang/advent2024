@@ -39,6 +39,7 @@ public class Puzzle {
   public static long traverse(char[][] grid, int maxX, int maxY, Position start, Position end, Map<Position, Long> scoreMap) {
     List<Path> paths = new ArrayList<>();
     paths.add(new Path(start, 0L));
+    scoreMap.put(start, 0L);
 
     long bestScore = Long.MAX_VALUE;
     while (!paths.isEmpty()) {
